@@ -14,7 +14,6 @@ var AJAX = {
                 return;
             }
 
-            console.log(xhr.response);
             callback(JSON.parse(xhr.response));           
         }
     },

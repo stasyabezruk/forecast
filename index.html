@@ -6,11 +6,49 @@
 	</head>
 	<body>
 		<div class="forecast-wrapper">
-			<input class="cityName" type="text" name="city">
+			<header class="forecast-header">
+				<div></div>
+				<input class="cityName" type="text" name="city" placeholder="City">
+			</header>
+			<main class="forecast-content">
+				<div class="current-weather-wrapper">
+					<div class="cur-date"></div>
 
-			<div class="datas"></div>
+					<div class="middle-container">
+						<div class="area"></div>
+						<div class="cur-temperature"></div>						
+						<div class="cur-mode-weather"></div>
+
+						<div class class="conditions-wrapper">
+							<div class="pressure-wrapper">
+								<span class="condition-label">Pressure: </span>
+								<span class="condition-val pressure-val"></span>
+							</div>
+
+							<div class="humidify-wrapper">
+								<span class="condition-label">Humidify: </span>
+								<span class="condition-val humidify-val"></span>
+							</div>
+
+							<div class="wind-wrapper">
+								<span class="condition-label">Wind Speed: </span>
+								<span class="condition-val wind-val"></span>
+							</div>
+
+							<div class="clouds-wrapper">
+								<span class="condition-label">Clouds: </span>
+								<span class="condition-val clouds-val"></span>
+							</div>
+						</div>
+					</div>
+
+				</div>		
+			</main>
+			
+			
 		</div>
 
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&language=en"></script> 
 		<script type="text/javascript" src="js/helper.js"></script>
 		<script type="text/javascript" src="js/ajax.js"></script>
 		<script type="text/javascript" src="js/forecast.js"></script>
