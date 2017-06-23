@@ -2,12 +2,12 @@
 <html lang="en">
 	<head>
 		<title>Forecast</title>	
-	   <!--  <link rel="stylesheet" href="css/style.css"> -->
+	   <link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
 		<div class="forecast-wrapper">
 			<header class="forecast-header">
-				<div></div>
+				<h1></h1>
 				<input class="cityName" type="text" name="city" placeholder="City">
 			</header>
 			<main class="forecast-content">
@@ -17,7 +17,10 @@
 					<div class="middle-container">
 						<div class="area"></div>
 						<div class="cur-temperature"></div>						
-						<div class="cur-mode-weather"></div>
+						<div class="cur-mode-weather">
+							<div class="cur-mode-icon"></div>
+							<div class="cur-mode-icon"></div>
+						</div>
 
 						<div class class="conditions-wrapper">
 							<div class="pressure-wrapper">
@@ -41,14 +44,29 @@
 							</div>
 						</div>
 					</div>
+				</div>	
 
-				</div>		
+				<div class="forecast-inner-container">
+					<h2>Forecast 16 days</h2>
+					<div class="chart-wrapper">
+						<div class="forecast-mode-nav">
+							<div class="nav-item wind-mode">Wind</div>
+							<div class="nav-item temp-mode">Temperature</div>
+							<div class="nav-item presure-mode">Pressure</div>
+							<div class="nav-item humidify-mode">Humidify</div>
+						</div>
+					</div>
+					<div id="chart" style="width:400px; height:400px;">
+						
+					</div>		
+				</div>	
 			</main>
 			
 			
 		</div>
 
-		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&language=en"></script> 
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&language=en"></script>
+		<script src="http://code.highcharts.com/highcharts.js"></script> 
 		<script type="text/javascript" src="js/helper.js"></script>
 		<script type="text/javascript" src="js/ajax.js"></script>
 		<script type="text/javascript" src="js/forecast.js"></script>

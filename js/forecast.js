@@ -3,7 +3,8 @@ var Forecast = (function () {
     function Forecast (root) {
         this.root = document.querySelector(root);
         this.cityNameField = this.root.querySelector('.cityName'); 
-        this.openWeatherUrl = 'http://api.openweathermap.org/data/2.5/forecast/daily?q=';
+        this.forecastUrl = 'http://api.openweathermap.org/data/2.5/forecast/daily?q=';
+        this.curWeatherUrl = 'http://api.openweathermap.org/data/2.5/weather?q=';
         this.openWeatherAppId = 'c80165ba743f1fe7bf5a6865ca960644';
         this.numDays = '16';
 
@@ -22,8 +23,7 @@ var Forecast = (function () {
             });
             var content = helper.getEl('.forecast-content', this.target);
             content.appendChild(noCurPOs);
-        }
-       
+        }       
     }
 
     Forecast.prototype.getCurCoords = function () {
@@ -67,7 +67,8 @@ var Forecast = (function () {
                             if (results[0].address_components[i].types[b] == "administrative_area_level_1") {
                                 var city = results[0].address_components[3].short_name + ', ' +  results[0].address_components[6].short_name;
                                 
-                                self.getDatas(city);
+                                self.getForecast(city);
+                                self.setCurrentWeather(city);
                                 self.cityNameField.value = city;                        
                             }
                         }
@@ -78,15 +79,31 @@ var Forecast = (function () {
         
     }
 
-    Forecast.prototype.getDatas = function (city) {
+    Forecast.prototype.getForecast = function (city) {
         var self = this,
-            url = this.openWeatherUrl + city + '&units=metric' + '&cnt=' + this.numDays +'&APPID=' + this.openWeatherAppId;
+            url = this.forecastUrl + city + '&units=metric' + '&cnt=' + this.numDays +'&APPID=' + this.openWeatherAppId;
 
         AJAX.GET(url, function (data) {
             console.log(data);            
         });
        
-    }    
+    }
+
+    Forecast.prototype.setCurrentWeather = function (city) {
+        var self = this,
+            url = this.curWeatherUrl + city + '&units=metric' + '&APPID=' + this.openWeatherAppId,
+            cityNameField = helper.getEl('.area', this.target),
+            pressureField = helper.getEl('.pressure-val', this.target);
+
+        AJAX.GET(url, function (data) {
+            console.log(data); 
+            var city = data.name + ', ' + data.sys.country,
+                pressure = data.main.pressure;
+
+            cityNameField.innerHTML = city;
+            pressureField.innerHTML = pressure; 
+        });
+    }   
 
     Forecast.prototype.addEvents = function () {
         var self = this;
@@ -96,7 +113,8 @@ var Forecast = (function () {
         this.cityNameField.addEventListener('keypress', function (e) {
             var cityVal = self.cityNameField.value
             if(e.keyCode === 13) {
-                self.getDatas(cityVal);
+                self.getForecast(cityVal);
+                self.setCurrentWeather(cityVal);
             }
         });
     }
