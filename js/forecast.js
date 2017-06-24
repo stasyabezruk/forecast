@@ -8,7 +8,8 @@ var Forecast = (function () {
         this.curWeatherUrl = 'http://api.openweathermap.org/data/2.5/weather?q=';
         this.openWeatherAppId = 'c80165ba743f1fe7bf5a6865ca960644';
         this.numDays = '16';
-        this.selectedMode = this.root.querySelector('.temperature');;
+        this.selectedMode = this.root.querySelector('.temperature-mode');
+        this.modeChart = 'temperature';
 
         this.addEvents();
     };
@@ -100,10 +101,10 @@ var Forecast = (function () {
         var self = this,
             url = this.forecastUrl + city + '&units=metric' + '&cnt=' + this.numDays +'&APPID=' + this.openWeatherAppId;
             
-
+            debugger;
         AJAX.GET(url, function (data) {
             console.log(data);
-            window.meteogram = new Meteogram(data, 'chart'); 
+            window.meteogram = new Meteogram(data, 'chart', self.modeChart); 
         });
        
     };
@@ -117,12 +118,13 @@ var Forecast = (function () {
     };
 
     Forecast.prototype.addEvents = function () {
-        var self = this;
+        var self = this,
+            cityVal = this.cityNameField.value;
 
         this.checkCurLocation();             
 
         this.cityNameField.addEventListener('keypress', function (e) {
-            var cityVal = self.cityNameField.value
+            cityVal = self.cityNameField.value;
             if(e.keyCode === 13) {
                 self.getForecast(cityVal);
                 self.setCurrentWeather(cityVal);
@@ -131,10 +133,12 @@ var Forecast = (function () {
 
         helper.addEvent('click', self.modeNavWrapper, function (e) {
             var target = e.target;
-
             if ( !helper.hasClass(target, 'nav-item') ) return;
-
             self.highlightMode(target);
+
+            self.modeChart = target.getAttribute('data-mode');
+            cityVal = self.cityNameField.value;
+            self.getForecast(cityVal);
         });
 
         

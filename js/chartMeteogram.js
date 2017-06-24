@@ -1,15 +1,12 @@
 var Meteogram = (function () {
 
-	function Meteogram(data, container) {
+	function Meteogram(data, container, modeWeather) {
+		debugger;
 	   	this.data = data;
 	    this.container = container;
 
 	    this.dates = [];
-	    this.temperatures = [];
-
-	    
-
-	   
+	    this.temperatures = [];	   
 	    this.parseData();
 	};
 
@@ -49,7 +46,6 @@ var Meteogram = (function () {
         		dateTimeLabelFormats: {
             		day: '%e %b'
         		}
-	        	/* 24 * 3600 * 1000*/
 	        },
 
 	        yAxis: [{
