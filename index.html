@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<title>Forecast</title>	
-	   <link rel="stylesheet" href="css/style.css">
+	   <link rel="stylesheet" href="css/style.min.css">
 	</head>
 	<body>
 		<div class="forecast-wrapper">
@@ -56,19 +56,18 @@
 							<div class="nav-item humidify-mode">Humidify</div>
 						</div>
 					</div>
-					<div id="chart" style="width:400px; height:400px;">
-						
-					</div>		
+					<div id="chart" style="width:100%; height:400px;"></div>		
 				</div>	
 			</main>
 			
 			
 		</div>
-
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&language=en"></script>
 		<script src="http://code.highcharts.com/highcharts.js"></script> 
 		<script type="text/javascript" src="js/helper.js"></script>
 		<script type="text/javascript" src="js/ajax.js"></script>
+		<script type="text/javascript" src="js/chartOptions.js"></script>
 		<script type="text/javascript" src="js/forecast.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>		
 	</body>

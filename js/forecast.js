@@ -79,31 +79,60 @@ var Forecast = (function () {
         
     }
 
-    Forecast.prototype.getForecast = function (city) {
-        var self = this,
-            url = this.forecastUrl + city + '&units=metric' + '&cnt=' + this.numDays +'&APPID=' + this.openWeatherAppId;
-
-        AJAX.GET(url, function (data) {
-            console.log(data);            
-        });
-       
-    }
-
     Forecast.prototype.setCurrentWeather = function (city) {
         var self = this,
             url = this.curWeatherUrl + city + '&units=metric' + '&APPID=' + this.openWeatherAppId,
             cityNameField = helper.getEl('.area', this.target),
             pressureField = helper.getEl('.pressure-val', this.target);
 
-        AJAX.GET(url, function (data) {
-            console.log(data); 
+        AJAX.GET(url, function (data) { 
             var city = data.name + ', ' + data.sys.country,
                 pressure = data.main.pressure;
 
             cityNameField.innerHTML = city;
             pressureField.innerHTML = pressure; 
         });
-    }   
+    }  
+
+    Forecast.prototype.getForecast = function (city) {
+        var self = this,
+            url = this.forecastUrl + city + '&units=metric' + '&cnt=' + this.numDays +'&APPID=' + this.openWeatherAppId;
+            
+
+        AJAX.GET(url, function (data) {
+            console.log(data);
+            window.meteogram = new Meteogram(data, 'chart'); 
+        });
+       
+    }
+
+
+
+
+    Date.prototype.getMonthText = function() {
+          var months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+          return months[this.getMonth()];
+    }
+
+    Forecast.prototype.getDates = function () {       
+        var datesArr = [],
+            i = 0,
+            date = new Date(),
+            month = date.getMonthText(),
+            curDate;
+
+
+        for ( i; i < 17; i++ ) {
+            date = date + i;
+            
+            curDate = date.getDate() + month;
+            datesArr.push(curDate);
+            console.log(datesArr); 
+        }  
+    }
+
+    
+    
 
     Forecast.prototype.addEvents = function () {
         var self = this;
