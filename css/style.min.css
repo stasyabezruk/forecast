@@ -1,1 +1,1 @@
-.condition-label{font-weight:700}.forecast-inner-container{margin-top:50px}.forecast-inner-container .nav-item{float:left;margin-right:20px}
+.condition-label,.forecast-inner-container .nav-item.active{font-weight:700}.forecast-inner-container{margin-top:50px}.forecast-inner-container .nav-item{float:left;margin-right:20px}.forecast-inner-container .nav-item:hover{cursor:pointer}

@@ -3,13 +3,15 @@ var Forecast = (function () {
     function Forecast (root) {
         this.root = document.querySelector(root);
         this.cityNameField = this.root.querySelector('.cityName'); 
+        this.modeNavWrapper = this.root.querySelector('.forecast-mode-nav');
         this.forecastUrl = 'http://api.openweathermap.org/data/2.5/forecast/daily?q=';
         this.curWeatherUrl = 'http://api.openweathermap.org/data/2.5/weather?q=';
         this.openWeatherAppId = 'c80165ba743f1fe7bf5a6865ca960644';
         this.numDays = '16';
+        this.selectedMode = this.root.querySelector('.temperature');;
 
         this.addEvents();
-    }
+    };
 
     Forecast.prototype.checkCurLocation = function () {
         var self = this;
@@ -24,7 +26,7 @@ var Forecast = (function () {
             var content = helper.getEl('.forecast-content', this.target);
             content.appendChild(noCurPOs);
         }       
-    }
+    };
 
     Forecast.prototype.getCurCoords = function () {
         var self = this;
@@ -50,7 +52,7 @@ var Forecast = (function () {
                 }                                        
             }
         );
-    }
+    };
 
     Forecast.prototype.getCurCityName = function (lat, lng) {
         var self = this;
@@ -77,7 +79,7 @@ var Forecast = (function () {
             }   
         });
         
-    }
+    };
 
     Forecast.prototype.setCurrentWeather = function (city) {
         var self = this,
@@ -92,7 +94,7 @@ var Forecast = (function () {
             cityNameField.innerHTML = city;
             pressureField.innerHTML = pressure; 
         });
-    }  
+    };  
 
     Forecast.prototype.getForecast = function (city) {
         var self = this,
@@ -104,35 +106,15 @@ var Forecast = (function () {
             window.meteogram = new Meteogram(data, 'chart'); 
         });
        
-    }
+    };
 
-
-
-
-    Date.prototype.getMonthText = function() {
-          var months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
-          return months[this.getMonth()];
-    }
-
-    Forecast.prototype.getDates = function () {       
-        var datesArr = [],
-            i = 0,
-            date = new Date(),
-            month = date.getMonthText(),
-            curDate;
-
-
-        for ( i; i < 17; i++ ) {
-            date = date + i;
-            
-            curDate = date.getDate() + month;
-            datesArr.push(curDate);
-            console.log(datesArr); 
-        }  
-    }
-
-    
-    
+    Forecast.prototype.highlightMode = function (node) {
+        if (this.selectedMode) {
+            this.selectedMode.classList.remove('active');
+          }
+          this.selectedMode = node;
+          this.selectedMode.classList.add('active');
+    };
 
     Forecast.prototype.addEvents = function () {
         var self = this;
@@ -146,7 +128,17 @@ var Forecast = (function () {
                 self.setCurrentWeather(cityVal);
             }
         });
-    }
+
+        helper.addEvent('click', self.modeNavWrapper, function (e) {
+            var target = e.target;
+
+            if ( !helper.hasClass(target, 'nav-item') ) return;
+
+            self.highlightMode(target);
+        });
+
+        
+    };
 
     return Forecast;
 })();

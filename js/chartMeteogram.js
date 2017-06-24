@@ -1,11 +1,13 @@
 var Meteogram = (function () {
 
 	function Meteogram(data, container) {
-	   
+	   	this.data = data;
+	    this.container = container;
+
+	    this.dates = [];
 	    this.temperatures = [];
 
-	    this.data = data;
-	    this.container = container;
+	    
 
 	   
 	    this.parseData();
@@ -16,7 +18,7 @@ var Meteogram = (function () {
         	data = this.data;
 
         data.list.forEach( function (forecast, i) {
-        	var temp = forecast.temp.eve;
+        	var temp = parseInt(forecast.temp.eve);
         	self.temperatures.push(temp);
         });
 
@@ -38,8 +40,17 @@ var Meteogram = (function () {
 	            renderTo: this.container,
 	       		type: 'column'
 	        },
+	        title: {
+        		text: null
+    		},
 
-	        xAxis: {},
+	        xAxis: {
+	        	type: 'datetime',
+        		dateTimeLabelFormats: {
+            		day: '%e %b'
+        		}
+	        	/* 24 * 3600 * 1000*/
+	        },
 
 	        yAxis: [{
 				tickInterval: 1
@@ -47,10 +58,18 @@ var Meteogram = (function () {
 
 	        series: [{
 	            name: 'Temperature',
-	            data: self.temperatures
+	            data: self.temperatures,
+	            pointStart: self.getCurDate(),
+        		pointInterval: 24 * 3600 * 1000 // one day
 	        }]
 	    };
 	};
+
+    Meteogram.prototype.getCurDate = function () {       
+         var d = new Date();
+         var date = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+         return date;
+    };
 
 
 	return Meteogram;
