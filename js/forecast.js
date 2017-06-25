@@ -26,15 +26,15 @@ var Forecast = (function () {
         if (navigator.geolocation) {
             return this.getCurCoords();
         } else {
-           this.geolocationDeclined();
+           this.geolocationNorSupported();
         }       
     };
 
-    //add error msg if geolocation is declined
-    Forecast.prototype.geolocationDeclined = function () {
+    //add error msg if geolocation is blockes for browser
+    Forecast.prototype.geolocationNorSupported = function () {
         var noCurPOs = helper.create('div', { 
                 class : 'no-geolocation', 
-                text : 'Geolocation is not supported by this browser! Reload the page and try again. Or you can type the city you want!'
+                text : 'Geolocation is not supported by this browser!'
             });
         var content = helper.getEl('.forecast-content', this.target);
 
@@ -58,7 +58,7 @@ var Forecast = (function () {
                 if (error.code == error.PERMISSION_DENIED) {
                     var noCurPOs = helper.create('div', { 
                         class : 'no-geolocation', 
-                        text : "The geolocation is blocked, so you can't see the forecast for you location!"
+                        text : "The geolocation is declined! Reload the page and try again. Or you can type the city you want and get the forecast!"
                     });
                     var content = helper.getEl('.forecast-content', this.target);
                     content.appendChild(noCurPOs);
@@ -108,13 +108,12 @@ var Forecast = (function () {
             cloudsField = helper.getEl('.clouds-val', this.target);
 
         AJAX.GET(url, function (data) { 
-            console.log(data);
             var city = data.name + ', ' + data.sys.country,
                 temperature = parseInt(data.main.temp) + '\xB0' +' C',
 
                 pressure = data.main.pressure,
                 humidity = data.main.humidity,
-                wind = data.wind.speed,
+                wind = parseInt(data.wind.speed),
                 clouds = data.clouds.all;
 
             self.setCurWeatherMode(data);
@@ -123,8 +122,8 @@ var Forecast = (function () {
             temperatureField.innerHTML = temperature;
 
             pressureField.innerHTML = pressure;
-            humidityField.innerHTML = humidity + 'm/s';
-            windField.innerHTML = wind;
+            humidityField.innerHTML = humidity;
+            windField.innerHTML = wind + 'm/s';
             cloudsField.innerHTML = clouds + '%';
         });
     };
@@ -209,9 +208,18 @@ var Forecast = (function () {
         this.cityNameField.addEventListener('keypress', function (e) {
             cityVal = self.cityNameField.value;
             if(e.keyCode === 13) {
+
+                var errorMsg = helper.getEl('.no-geolocation', this.target);
+                    if (errorMsg) {
+                    helper.getEl('.forecast-content', this.target).removeChild(errorMsg);
+                }
+
                 self.getForecast(cityVal);
                 self.getCurrentWeather(cityVal);
             }
+
+            
+
         });
 
         helper.addEvent('click', self.modeNavWrapper, function (e) {
