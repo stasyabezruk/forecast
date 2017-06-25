@@ -7,64 +7,61 @@
 	<body>
 		<div class="content">
 			<div class="forecast-wrapper">
-			<header class="forecast-header">
-				<span class="weather-icon"><i class="fa fa-sun-o" aria-hidden="true"></i></span>
-				<h1>Forecast</h1>
-				<div class="city-field-wrapper">
-					<input class="cityName" type="text" name="city" placeholder="City">
-				</div>				
-			</header>
-			<main class="forecast-content">
-				<div class="current-weather-wrapper">
-					<div class="cur-date"></div>
+				<header class="forecast-header">
+					<span class="weather-icon"><i class="fa fa-sun-o" aria-hidden="true"></i></span>
+					<h1>Forecast</h1>
+					<div class="city-field-wrapper">
+						<input class="cityName" type="text" name="city" placeholder="City">
+					</div>			
+				</header>
+				<main class="forecast-content">
+					<div class="current-weather-wrapper">
+						<div class="cur-date"></div>
 
-					<div class="middle-container">
-						<div class="area"></div>
-						<div class="cur-temperature"></div>						
-						<div class="cur-mode-weather">
-							<div class="cur-mode-icon"></div>
-							<div class="cur-mode-icon"></div>
-						</div>
+						<div class="middle-container">
+							<div class="area middle-col"></div>
+							<div class="cur-temperature middle-col"></div>						
+							<div class="cur-mode-weather middle-col"></div>
 
-						<div class class="conditions-wrapper">
-							<div class="pressure-wrapper">
-								<span class="condition-label">Pressure: </span>
-								<span class="condition-val pressure-val"></span>
-							</div>
+							<div class="conditions-wrapper middle-col">
+								<div class="pressure-wrapper weather-type">
+									<span class="condition-label">Pressure: </span>
+									<span class="condition-val pressure-val"></span>
+								</div>
 
-							<div class="humidify-wrapper">
-								<span class="condition-label">Humidify: </span>
-								<span class="condition-val humidify-val"></span>
-							</div>
+								<div class="humidity-wrapper weather-type">
+									<span class="condition-label">Humidity: </span>
+									<span class="condition-val humidity-val"></span>
+								</div>
 
-							<div class="wind-wrapper">
-								<span class="condition-label">Wind Speed: </span>
-								<span class="condition-val wind-val"></span>
-							</div>
+								<div class="wind-wrapper weather-type">
+									<span class="condition-label">Wind Speed: </span>
+									<span class="condition-val wind-val"></span>
+								</div>
 
-							<div class="clouds-wrapper">
-								<span class="condition-label">Clouds: </span>
-								<span class="condition-val clouds-val"></span>
+								<div class="clouds-wrapper weather-type">
+									<span class="condition-label">Clouds: </span>
+									<span class="condition-val clouds-val"></span>
+								</div>
 							</div>
 						</div>
-					</div>
-				</div>	
+					</div>	
 
-				<div class="forecast-inner-container">
-					<h2>Forecast 16 days</h2>
-					<div class="chart-wrapper">
-						<div class="forecast-mode-nav">
-							<div data-mode="wind" class="nav-item wind-mode">Wind</div>
-							<div data-mode="temperature" class="nav-item temperature-mode active">Temperature</div>
-							<div data-mode="pressure" class="nav-item pressure-mode">Pressure</div>
-							<div data-mode="humidify" class="nav-item humidify-mode">Humidify</div>
+					<div class="forecast-inner-container">
+						<h2>Forecast 16 days</h2>
+						<div class="chart-wrapper">
+							<div class="forecast-mode-nav">
+								<div data-mode="wind" class="nav-item wind-mode">Wind</div>
+								<div data-mode="temperature" class="nav-item temperature-mode active">Temperature</div>
+								<div data-mode="pressure" class="nav-item pressure-mode">Pressure</div>
+								<div data-mode="humidity" class="nav-item humidity-mode">Humidity</div>
+							</div>
 						</div>
-					</div>
-					<div id="chart" style="width:100%; height:300px;"></div>		
-				</div>	
-			</main>
-			<footer></footer>			
-		</div>
+						<div id="chart" style="width:100%; height:300px;"></div>		
+					</div>	
+				</main>
+				<footer></footer>			
+			</div>
 		</div>
 		
 		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>

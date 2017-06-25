@@ -4,36 +4,48 @@ var Forecast = (function () {
         this.root = document.querySelector(root);
         this.cityNameField = this.root.querySelector('.cityName'); 
         this.modeNavWrapper = this.root.querySelector('.forecast-mode-nav');
+        this.curDateWrapper = this.root.querySelector('.cur-date');
+
         this.forecastUrl = 'http://api.openweathermap.org/data/2.5/forecast/daily?q=';
         this.curWeatherUrl = 'http://api.openweathermap.org/data/2.5/weather?q=';
+        this.weatherImgUrl = 'http://openweathermap.org/img/w/';
         this.openWeatherAppId = 'c80165ba743f1fe7bf5a6865ca960644';
         this.numDays = '16';
+
         this.selectedMode = this.root.querySelector('.temperature-mode');
         this.modeChart = 'temperature';
 
         this.addEvents();
     };
 
+
+    //check if geolocaion is allowes
     Forecast.prototype.checkCurLocation = function () {
         var self = this;
 
         if (navigator.geolocation) {
-            return self.getCurCoords();
+            return this.getCurCoords();
         } else {
-            var noCurPOs = helper.create('div', { 
-                class : 'no-geolocation', 
-                test : 'Geolocation is not supported by this browser!'
-            });
-            var content = helper.getEl('.forecast-content', this.target);
-            content.appendChild(noCurPOs);
+           this.geolocationDeclined();
         }       
     };
 
+    //add error msg if geolocation is declined
+    Forecast.prototype.geolocationDeclined = function () {
+        var noCurPOs = helper.create('div', { 
+                class : 'no-geolocation', 
+                text : 'Geolocation is not supported by this browser! Reload the page and try again. Or you can type the city you want!'
+            });
+        var content = helper.getEl('.forecast-content', this.target);
+
+        content.appendChild(noCurPOs);
+    };
+
+    //get current location by geolocation
     Forecast.prototype.getCurCoords = function () {
         var self = this;
 
-        navigator.geolocation.getCurrentPosition ( 
-
+        navigator.geolocation.getCurrentPosition (
             function (pos) {
                 var coord = pos.coords,
                     lat = coord.latitude,
@@ -55,6 +67,7 @@ var Forecast = (function () {
         );
     };
 
+    //get and write the name of city via geolocation and Geocoder, then get current weather for current location
     Forecast.prototype.getCurCityName = function (lat, lng) {
         var self = this;
         var geocoder = new google.maps.Geocoder();
@@ -71,33 +84,111 @@ var Forecast = (function () {
                                 var city = results[0].address_components[3].short_name + ', ' +  results[0].address_components[6].short_name;
                                 
                                 self.getForecast(city);
-                                self.setCurrentWeather(city);
+                                self.getCurrentWeather(city);
                                 self.cityNameField.value = city;                        
                             }
                         }
                     }                    
                 }
             }   
-        });
-        
+        });        
     };
 
-    Forecast.prototype.setCurrentWeather = function (city) {
+
+    //get datas for current weather
+    Forecast.prototype.getCurrentWeather = function (city) {
         var self = this,
             url = this.curWeatherUrl + city + '&units=metric' + '&APPID=' + this.openWeatherAppId,
-            cityNameField = helper.getEl('.area', this.target),
-            pressureField = helper.getEl('.pressure-val', this.target);
+            cityNameField = helper.getEl('.area', this.target),            
+            temperatureField = helper.getEl('.cur-temperature', this.target),
+            
+            pressureField = helper.getEl('.pressure-val', this.target),
+            humidityField = helper.getEl('.humidity-val', this.target),
+            windField = helper.getEl('.wind-val', this.target),
+            cloudsField = helper.getEl('.clouds-val', this.target);
 
         AJAX.GET(url, function (data) { 
+            console.log(data);
             var city = data.name + ', ' + data.sys.country,
-                pressure = data.main.pressure;
+                temperature = parseInt(data.main.temp) + '\xB0' +' C',
+
+                pressure = data.main.pressure,
+                humidity = data.main.humidity,
+                wind = data.wind.speed,
+                clouds = data.clouds.all;
+
+            self.setCurWeatherMode(data);
 
             cityNameField.innerHTML = city;
-            pressureField.innerHTML = pressure; 
-        });
-    };  
+            temperatureField.innerHTML = temperature;
 
-    Forecast.prototype.getForecast = function (city) {
+            pressureField.innerHTML = pressure;
+            humidityField.innerHTML = humidity + 'm/s';
+            windField.innerHTML = wind;
+            cloudsField.innerHTML = clouds + '%';
+        });
+    };
+
+    //create box with mode weather and icon for current weather
+    Forecast.prototype.setCurWeatherMode = function (data) {
+        var curWeatherMode = helper.getEl('.cur-mode-weather', this.target),
+
+            iconWeatherUrl = this.weatherImgUrl + data.weather[0].icon + '.png',
+            iconWeather = helper.create('img', {
+                src: iconWeatherUrl
+            });
+            modeWeather = data.weather[0].main;
+        
+        curWeatherMode.innerHTML = '';
+
+        var iconWeatherWrapper = helper.create('span', {
+            class: 'icon-weather-wrapper',
+        });
+        iconWeatherWrapper.appendChild(iconWeather);
+
+        var modeWeatherWrapper = helper.create('span', {
+            class: 'mode-weather-wrapper',
+            text: modeWeather
+        });
+
+        curWeatherMode.appendChild(iconWeatherWrapper);
+        curWeatherMode.appendChild(modeWeatherWrapper);
+    }
+   
+
+    //highlight button for temp/pressure/wind/humidity
+    Forecast.prototype.highlightMode = function (node) {
+        if (this.selectedMode) {
+            this.selectedMode.classList.remove('active');
+          }
+          this.selectedMode = node;
+          this.selectedMode.classList.add('active');
+    };
+
+
+    //show current Date
+    Forecast.prototype.showCurDate = function () {
+        var now = new Date(),
+            month = now.getMonthName(),
+            weekDay = now.getWeekDay(),
+            day = now.getDate();
+
+        var date = weekDay + ', ' + day + ' ' + month;
+        this.curDateWrapper.innerHTML = date;
+    };
+    Date.prototype.getMonthName = function() {
+        var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        return months[ this.getMonth() ];
+    };
+
+    Date.prototype.getWeekDay = function() {
+        var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        return days[ this.getDay() ];
+    };
+    //END-----------show current Date
+
+
+     Forecast.prototype.getForecast = function (city) {
         var self = this,
             url = this.forecastUrl + city + '&units=metric' + '&cnt=' + this.numDays +'&APPID=' + this.openWeatherAppId;
             
@@ -108,25 +199,18 @@ var Forecast = (function () {
        
     };
 
-    Forecast.prototype.highlightMode = function (node) {
-        if (this.selectedMode) {
-            this.selectedMode.classList.remove('active');
-          }
-          this.selectedMode = node;
-          this.selectedMode.classList.add('active');
-    };
-
     Forecast.prototype.addEvents = function () {
         var self = this,
             cityVal = this.cityNameField.value;
 
-        this.checkCurLocation();             
+        this.checkCurLocation();    
+        this.showCurDate();         
 
         this.cityNameField.addEventListener('keypress', function (e) {
             cityVal = self.cityNameField.value;
             if(e.keyCode === 13) {
                 self.getForecast(cityVal);
-                self.setCurrentWeather(cityVal);
+                self.getCurrentWeather(cityVal);
             }
         });
 

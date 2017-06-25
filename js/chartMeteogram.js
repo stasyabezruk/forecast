@@ -8,7 +8,7 @@ var Meteogram = (function () {
 	    this.dates = [];
 	    this.temperatures = [];	
 	    this.pressures = [];
-	    this.humidify = [];
+	    this.humidity = [];
 	    this.wind = [];   
 	    this.parseData();
 	};
@@ -31,8 +31,8 @@ var Meteogram = (function () {
 
 	    if ( this.modeWeather == 'pressure') {
 			options = this.getPressureOptions();
-	    } else if ( this.modeWeather == 'humidify') {
-			options = this.getHumidifyOptions();
+	    } else if ( this.modeWeather == 'humidity') {
+			options = this.getHumidityOptions();
 	    } else if ( this.modeWeather == 'widn') {
 			options = this.getWindOptions();
 	    }
@@ -47,8 +47,15 @@ var Meteogram = (function () {
 	    return {
 	        chart: {
 	            renderTo: this.container,
-	       		type: 'column'
-	        },
+	       		type: 'column',
+	       		backgroundColor: '#f7f7f7',
+
+	       		spacingBottom: 20,
+	        	spacingTop: 40,
+		        spacingLeft: 20,
+		        spacingRight: 20
+		    },
+
 	        title: {
         		text: null
     		},
@@ -82,7 +89,7 @@ var Meteogram = (function () {
 			        }
 			    }			     
 	        }],
-	        
+
 	        legend: {
 		        enabled: false
 		    },
