@@ -101,7 +101,6 @@ var Forecast = (function () {
         var self = this,
             url = this.forecastUrl + city + '&units=metric' + '&cnt=' + this.numDays +'&APPID=' + this.openWeatherAppId;
             
-            debugger;
         AJAX.GET(url, function (data) {
             console.log(data);
             window.meteogram = new Meteogram(data, 'chart', self.modeChart); 

@@ -1,12 +1,15 @@
 var Meteogram = (function () {
 
 	function Meteogram(data, container, modeWeather) {
-		debugger;
 	   	this.data = data;
 	    this.container = container;
+	    this.modeWeather = modeWeather;
 
 	    this.dates = [];
-	    this.temperatures = [];	   
+	    this.temperatures = [];	
+	    this.pressures = [];
+	    this.humidify = [];
+	    this.wind = [];   
 	    this.parseData();
 	};
 
@@ -19,17 +22,26 @@ var Meteogram = (function () {
         	self.temperatures.push(temp);
         });
 
-        console.log(self.temperatures);
         this.createChart();
 	};
 
 	Meteogram.prototype.createChart = function () {
-	    var self = this;
-	    this.chart = new Highcharts.Chart(this.getChartOptions());
+	    var self = this,
+	    	options = this.getTemperatureOptions();
+
+	    if ( this.modeWeather == 'pressure') {
+			options = this.getPressureOptions();
+	    } else if ( this.modeWeather == 'humidify') {
+			options = this.getHumidifyOptions();
+	    } else if ( this.modeWeather == 'widn') {
+			options = this.getWindOptions();
+	    }
+
+	    this.chart = new Highcharts.Chart(options);
 	};
 
 	//Build and return the Highcharts options structure 
-	Meteogram.prototype.getChartOptions = function () {
+	Meteogram.prototype.getTemperatureOptions = function () {
 	    var self = this;
 
 	    return {
@@ -48,15 +60,42 @@ var Meteogram = (function () {
         		}
 	        },
 
-	        yAxis: [{
-				tickInterval: 1
+	        yAxis: [{				
+				title: { text: null },
+				maxPadding: 0.2,
+				tickPositioner: function () {
+	                var max = Math.ceil(this.max) + 1,
+	                    pos = max - 12, // start
+	                    ret;
+
+	                if (pos < this.min) {
+	                    ret = [];
+	                    while (pos <= max) {
+	                        ret.push(pos += 1);
+	                    }
+	                } // else return undefined and go auto
+	                return ret;
+	            },
+	            labels: {
+			        formatter: function() {
+			            return this.value + '\xB0C';
+			        }
+			    }			     
 	        }],
+	        
+	        legend: {
+		        enabled: false
+		    },
 
 	        series: [{
 	            name: 'Temperature',
 	            data: self.temperatures,
 	            pointStart: self.getCurDate(),
-        		pointInterval: 24 * 3600 * 1000 // one day
+        		pointInterval: 24 * 3600 * 1000,// one day
+        		tooltip: { 
+        			valueSuffix: '\xB0C'
+            	},
+            	color: '#ffa9a9'
 	        }]
 	    };
 	};

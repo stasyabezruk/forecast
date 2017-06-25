@@ -1,8 +1,35 @@
-.condition-label { font-weight: bold;  }
+@import "styleVariables";
+@import "font-awesome/font-awesome.less";
 
-.forecast-inner-container { margin-top: 50px; 
-	.nav-item { float: left; margin-right: 20px; 
-		&:hover { cursor: pointer; }
-		&.active { font-weight: bold; }
+* { padding: 0; margin: 0; }
+
+.content { .displayFlex(); justify-content: center; align-self: center; }
+
+.forecast-wrapper { width: 1200px; 
+	.forecast-header { float: left; width: 100%; padding: 10px 0; .boxSizing();
+		.weather-icon { float: left; font-size: 20px; margin: 2px 10px 0 0; }
+		h1 { float: left; margin: 0; font-size: 24px; }
+		.city-field-wrapper { float: left;; }
+	}
+
+	.forecast-content { float: left; width: 100%; 
+		.forecast-inner-container { margin-top: 50px; .boxSizing(); 
+			.nav-item { float: left; margin-right: 20px; 
+				&:hover { cursor: pointer; }
+				&.active { font-weight: bold; }
+			}
+		}
+		.forecast-mode-nav { float: left; margin-bottom: 20px; }
 	}
 }
+
+
+
+
+
+
+
+#chart { float: left; }
+
+footer { .clear(); }
+

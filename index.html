@@ -5,10 +5,14 @@
 	   <link rel="stylesheet" href="css/style.min.css">
 	</head>
 	<body>
-		<div class="forecast-wrapper">
+		<div class="content">
+			<div class="forecast-wrapper">
 			<header class="forecast-header">
-				<h1></h1>
-				<input class="cityName" type="text" name="city" placeholder="City">
+				<span class="weather-icon"><i class="fa fa-sun-o" aria-hidden="true"></i></span>
+				<h1>Forecast</h1>
+				<div class="city-field-wrapper">
+					<input class="cityName" type="text" name="city" placeholder="City">
+				</div>				
 			</header>
 			<main class="forecast-content">
 				<div class="current-weather-wrapper">
@@ -56,12 +60,13 @@
 							<div data-mode="humidify" class="nav-item humidify-mode">Humidify</div>
 						</div>
 					</div>
-					<div id="chart" style="width:100%; height:400px;"></div>		
+					<div id="chart" style="width:100%; height:300px;"></div>		
 				</div>	
 			</main>
-			
-			
+			<footer></footer>			
 		</div>
+		</div>
+		
 		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&language=en"></script>
 		<script src="http://code.highcharts.com/highcharts.js"></script> 
