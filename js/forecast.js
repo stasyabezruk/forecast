@@ -131,20 +131,12 @@ var Forecast = (function () {
     //create box with mode weather and icon for current weather
     Forecast.prototype.setCurWeatherMode = function (data) {
         var curWeatherMode = helper.getEl('.cur-mode-weather', this.target),
-
-            iconWeatherUrl = this.weatherImgUrl + data.weather[0].icon + '.png',
-            iconWeather = helper.create('img', {
-                src: iconWeatherUrl
-            }),
             weatherStr = data.weather[0].description,
-            modeWeather = weatherStr.charAt(0).toUpperCase() + weatherStr.slice(1);
-        
-        curWeatherMode.innerHTML = '';
+            modeWeather = weatherStr.charAt(0).toUpperCase() + weatherStr.slice(1),
 
-        var iconWeatherWrapper = helper.create('span', {
-            class: 'icon-weather-wrapper',
-        });
-        iconWeatherWrapper.appendChild(iconWeather);
+            iconWeatherWrapper = this.createWeatherIcon(data);
+        
+        curWeatherMode.innerHTML = ''; 
 
         var modeWeatherWrapper = helper.create('span', {
             class: 'mode-weather-wrapper',
@@ -153,6 +145,20 @@ var Forecast = (function () {
 
         curWeatherMode.appendChild(iconWeatherWrapper);
         curWeatherMode.appendChild(modeWeatherWrapper);
+    };
+
+    Forecast.prototype.createWeatherIcon = function (data) {
+        var iconWeatherUrl = this.weatherImgUrl + data.weather[0].icon + '.png',
+            
+            iconWeather = helper.create('img', {
+                src: iconWeatherUrl
+            }),
+
+            iconWeatherWrapper = helper.create('span', {
+            class: 'icon-weather-wrapper',
+        });
+        iconWeatherWrapper.appendChild(iconWeather);
+        return iconWeatherWrapper;
     };
    
 
