@@ -354,7 +354,7 @@ var Meteogram = (function () {
 			        style: {
 		                color: '#d35bfc'
 		            }
-			    }б
+			    },
 		        opposite: true
 
 		    }],

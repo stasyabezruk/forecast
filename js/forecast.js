@@ -107,7 +107,7 @@ var Forecast = (function () {
             windField = helper.getEl('.wind-val', this.target),
             cloudsField = helper.getEl('.clouds-val', this.target);
 
-        AJAX.GET(url, function (data) { 
+        AJAX.GET(url, function (data) {
             var city = data.name + ', ' + data.sys.country,
                 temperature = parseInt(data.main.temp) + '\xB0' +' C',
 
@@ -135,8 +135,9 @@ var Forecast = (function () {
             iconWeatherUrl = this.weatherImgUrl + data.weather[0].icon + '.png',
             iconWeather = helper.create('img', {
                 src: iconWeatherUrl
-            });
-            modeWeather = data.weather[0].main;
+            }),
+            weatherStr = data.weather[0].description,
+            modeWeather = weatherStr.charAt(0).toUpperCase() + weatherStr.slice(1);
         
         curWeatherMode.innerHTML = '';
 
@@ -152,7 +153,7 @@ var Forecast = (function () {
 
         curWeatherMode.appendChild(iconWeatherWrapper);
         curWeatherMode.appendChild(modeWeatherWrapper);
-    }
+    };
    
 
     //highlight button for temp/pressure/wind/humidity
