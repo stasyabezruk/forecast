@@ -7,9 +7,10 @@ var Meteogram = (function () {
 
 	    this.dates = [];
 	    this.temperatures = [];	
-	    this.pressures = [];
+	    this.pressures = [];	    
+	    this.windSpeed = []; 
 	    this.humidity = [];
-	    this.windSpeed = [];   
+	    this.clouds = []; 
 	    this.parseData();
 	};
 
@@ -21,12 +22,14 @@ var Meteogram = (function () {
         	var temp = parseInt(forecast.temp.eve),
         		wind = parseInt(forecast.speed),
         		hum = parseInt(forecast.humidity),
-        		pres = parseInt(forecast.pressure);
+        		pres = forecast.pressure,
+        		cloud = forecast.clouds;
 
         	self.temperatures.push(temp);
-        	self.windSpeed.push(wind);
-        	self.humidity.push(hum);
+        	self.windSpeed.push(wind);        	
         	self.pressures.push(pres);
+        	self.humidity.push(hum);
+        	self.clouds.push(cloud);
         });
 
         this.createChart();
@@ -102,7 +105,7 @@ var Meteogram = (function () {
 		    },
 
 	        series: [{
-	            name: 'Temperature',
+	            name: 'Temperature: ',
 	            data: self.temperatures,
 	            pointStart: self.getCurDate(),
         		pointInterval: 24 * 3600 * 1000,// one day
@@ -228,7 +231,7 @@ var Meteogram = (function () {
 		    },
 
 	        series: [{
-	            name: 'Wind Speed',
+	            name: 'Wind Speed: ',
 	            data: self.windSpeed,
 	            pointStart: self.getCurDate(),
         		pointInterval: 24 * 3600 * 1000,// one day
@@ -267,25 +270,13 @@ var Meteogram = (function () {
 
 	        yAxis: [{				
 				title: { text: null },
-				maxPadding: 0.2,
-				tickPositioner: function () {
-	                var max = Math.ceil(this.max) + 1,
-	                    pos = max - 12, // start
-	                    ret;
-
-	                if (pos < this.min) {
-	                    ret = [];
-	                    while (pos <= max) {
-	                        ret.push(pos += 1);
-	                    }
-	                } // else return undefined and go auto
-	                return ret;
-	            },
 	            labels: {
 			        formatter: function() {
-			            return this.value + '\xB0C';
+			            return this.value + ' hP';
 			        }
-			    }			     
+			    },
+
+			    type: 'logarithmic'	//to start with their values		     
 	        }],
 
 	        legend: {
@@ -293,18 +284,109 @@ var Meteogram = (function () {
 		    },
 
 	        series: [{
-	            name: 'Temperature',
+	            name: 'Pressure: ',
 	            data: self.pressures,
 	            pointStart: self.getCurDate(),
         		pointInterval: 24 * 3600 * 1000,// one day
         		tooltip: { 
-        			valueSuffix: '\xB0C'
+        			valueSuffix: ' hp'
             	},
-            	color: '#6ccec5',
-            	negativeColor: '#48AFE8'
+            	color: '#6ccec5'
 	        }]
 	    };
 	};
+
+	Meteogram.prototype.getHumidityOptions = function () {
+	    var self = this;
+
+	    return {
+	        chart: {
+	            renderTo: this.container,
+	       		type: 'spline',
+
+	       		backgroundColor: '#f7f7f7',
+
+	       		spacingBottom: 20,
+	        	spacingTop: 40,
+		        spacingLeft: 20,
+		        spacingRight: 20
+		    },
+
+	        title: {
+        		text: null
+    		},
+
+	        xAxis: {
+	        	type: 'datetime',
+        		dateTimeLabelFormats: {
+            		day: '%e %b'
+        		}
+	        },
+
+	        yAxis: [{ //Humidity				
+				title: { 
+					text: 'Humidity',
+					style: {
+		                color: '#d35bfc'
+		            }
+				},
+	            labels: {
+			        formatter: function() {
+			            return this.value + ' %';
+			        },
+			        style: {
+		                color: '#d35bfc'
+		            }
+			    }
+			       
+	        }, { // Secondary yAxis
+		        gridLineWidth: 0,
+		        title: {
+		            text: 'Clouds',
+		            style: {
+		                color: '#fb346a'
+		            }
+		        },
+	            labels: {
+			        formatter: function() {
+			            return this.value + ' %';
+			        },
+			        style: {
+		                color: '#d35bfc'
+		            }
+			    }б
+		        opposite: true
+
+		    }],
+
+	        legend: {
+		        enabled: false
+		    },
+
+	        series: [{
+	            name: 'Humidity: ',
+	            data: self.humidity,
+	            pointStart: self.getCurDate(),
+        		pointInterval: 24 * 3600 * 1000,// one day
+
+        		tooltip: { 
+        			valueSuffix: ' %'
+            	},
+            	color: '#d35bfc'
+	        }, {
+	            name: 'Clouds: ',
+	            data: self.clouds,
+	            pointStart: self.getCurDate(),
+        		pointInterval: 24 * 3600 * 1000,// one day
+        		tooltip: { 
+        			valueSuffix: ' %'
+            	},
+            	color: '#fb346a',
+            	dashStyle: 'shortdot'
+	        }]
+	    };
+	};
+
 
     Meteogram.prototype.getCurDate = function () {       
          var d = new Date();
