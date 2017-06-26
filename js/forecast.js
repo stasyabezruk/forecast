@@ -19,7 +19,7 @@ var Forecast = (function () {
     };
 
 
-    //check if geolocaion is allowes
+    //check if geolocaion is allowed
     Forecast.prototype.checkCurLocation = function () {
         var self = this;
 
@@ -39,6 +39,19 @@ var Forecast = (function () {
         var content = helper.getEl('.forecast-content', this.target);
 
         content.appendChild(noCurPOs);
+    };
+
+    Forecast.prototype.errorCity = function () {
+        var noCurPOs = helper.create('div', { 
+                class : 'no-geolocation invalidCity', 
+                text : 'Your city is invalid! Try again!'
+            });
+        var content = helper.getEl('.forecast-content', this.target);
+
+        if ( !helper.getEl('.no-geolocation', this.target) ) {
+        	content.appendChild(noCurPOs);
+        }
+        
     };
 
     //get current location by geolocation
@@ -108,13 +121,19 @@ var Forecast = (function () {
             cloudsField = helper.getEl('.clouds-val', this.target);
 
         AJAX.GET(url, function (data) {
-            var city = data.name + ', ' + data.sys.country,
+            var city,
                 temperature = parseInt(data.main.temp) + '\xB0' +' C',
 
                 pressure = data.main.pressure,
                 humidity = data.main.humidity,
                 wind = parseInt(data.wind.speed),
                 clouds = data.clouds.all;
+
+            if (data.sys.country) {
+            	city = data.name + ', ' + data.sys.country;
+            } else {
+            	city = data.name;
+            }
 
             self.setCurWeatherMode(data);
 
@@ -125,7 +144,7 @@ var Forecast = (function () {
             humidityField.innerHTML = humidity;
             windField.innerHTML = wind + 'm/s';
             cloudsField.innerHTML = clouds + '%';
-        });
+        }, self.errorCity);
     };
 
     //create box with mode weather and icon for current weather
@@ -186,7 +205,6 @@ var Forecast = (function () {
         var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         return months[ this.getMonth() ];
     };
-
     Date.prototype.getWeekDay = function() {
         var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         return days[ this.getDay() ];
@@ -199,9 +217,8 @@ var Forecast = (function () {
             url = this.forecastUrl + city + '&units=metric' + '&cnt=' + this.numDays +'&APPID=' + this.openWeatherAppId;
             
         AJAX.GET(url, function (data) {
-            console.log(data);
             window.meteogram = new Meteogram(data, 'chart', self.modeChart); 
-        });
+        }, self.errorCity);
        
     };
 
@@ -216,16 +233,14 @@ var Forecast = (function () {
             cityVal = self.cityNameField.value;
             if(e.keyCode === 13) {
 
-                var errorMsg = helper.getEl('.no-geolocation', this.target);
-                    if (errorMsg) {
-                    helper.getEl('.forecast-content', this.target).removeChild(errorMsg);
+                var errorMsg = helper.getEl('.no-geolocation', self.target);
+                if (errorMsg) {
+                    helper.getEl('.forecast-content', self.target).removeChild(errorMsg);
                 }
 
                 self.getForecast(cityVal);
                 self.getCurrentWeather(cityVal);
-            }
-
-            
+            }         
 
         });
 

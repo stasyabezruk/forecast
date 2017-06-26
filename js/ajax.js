@@ -1,5 +1,5 @@
 var AJAX = {
-    GET: function (url, callback) {
+    GET: function (url, callback, errorFunc) {
         var xhr = new XMLHttpRequest();
 
         xhr.open('GET', url, true);
@@ -11,6 +11,7 @@ var AJAX = {
 
             if (this.status != 200) {
                 console.log('Error');
+                errorFunc();
                 return;
             }
 
